@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ai-sms-advisory
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+     - key: COHERE_API_KEY
+    value: DGd7ASeNFpOTBHffl8Gm4x1SQjhM3vS046mnhC3D
+      - key: AT_USERNAME
+        value: sandbox
+      - key: AT_API_KEY
+        value: atsk_da9f3e81061190e4275f34346dc36f5efcc115092e3357bb23f381d9c3ac73e10bc2f48c
