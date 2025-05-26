@@ -12,15 +12,14 @@ app = Flask(__name__)
 
 # Africa's Talking credentials
 username = os.getenv("AT_USERNAME", "sandbox")
-api_key = os.getenv("atsk_2fcfbda6154e6871153dbbe329df056eafb268bf09fd0ff9d75c793baaa69af1ee65b765")
+api_key = os.getenv("AT_API_KEY")
 
 # Initialize Africa's Talking SDK
 africastalking.initialize(username, api_key)
 sms = africastalking.SMS
 
 # OpenAI API Key
-openai.api_key = os.getenv("OPENAI_API_KEY"
-                        )
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 @app.route("/sms", methods=["POST"])
 def receive_sms():
