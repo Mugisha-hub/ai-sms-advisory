@@ -1,19 +1,16 @@
 import africastalking
 
-username = "sandbox"
-api_key = "atsk_da9f3e81061190e4275f34346dc36f5efcc115092e3357bb23f381d9c3ac73e10bc2f48c"  # Paste your real key here
-
+# Initialize
+username = "sandbox"  # Use 'sandbox' for testing
+api_key = "atsk_2fcfbda6154e6871153dbbe329df056eafb268bf09fd0ff9d75c793baaa69af1ee65b765"  # Replace with your sandbox or production key
 africastalking.initialize(username, api_key)
+
 sms = africastalking.SMS
 
-def send_sms():
-    recipients = ["+250788615868"]  # Your test phone number
-    message = "Hello from AI Agri Advisor!"
+# Send SMS
+try:
+    response = sms.send("Hello from Africa's Talking!", ["+250788615868"])
+    print(response)
+except Exception as e:
+    print(f"Error: {e}")
 
-    try:
-        response = sms.send(message, recipients)
-        print(response)
-    except Exception as e:
-        print(f"Error sending SMS: {e}")
-
-send_sms()
