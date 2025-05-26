@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # Africa's Talking credentials
 username = os.getenv("AT_USERNAME", "sandbox")
-api_key = os.getenv("AT_API_KEY")
+api_key = os.getenv("AFRICASTALKING_API_KEY")
 
 # Initialize Africa's Talking SDK
 africastalking.initialize(username, api_key)
