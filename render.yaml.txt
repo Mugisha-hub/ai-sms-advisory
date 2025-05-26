@@ -1,13 +1,10 @@
 services:
   - type: web
     name: sms-advisory-app
-    runtime: python
+    env: python
+    plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: python app.py
+    startCommand: gunicorn app:app
     envVars:
-      - key: AT_USERNAME
-        value: sandbox
-      - key: AT_API_KEY
-        value: atsk_4c10fd7d07e3bab2f0bfc4ee5f195ef0e6fb629343bbaf669cd18be67e302a9f71f08f0b
-      - key: COHERE_API_KEY
-        value: DGd7ASeNFpOTBHffl8Gm4x1SQjhM3vS046mnhC3D
+      - key: FLASK_ENV
+        value: production
