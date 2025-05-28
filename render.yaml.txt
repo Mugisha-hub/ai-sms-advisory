@@ -8,3 +8,9 @@ services:
     envVars:
       - key: FLASK_ENV
         value: production
+      - key: AT_USERNAME
+        value: sandbox
+      - key: AFRICASTALKING_API_KEY
+        value: atsk_2fcfbda6154e6871153dbbe329df056eafb268bf09fd0ff9d75c793baaa69af1ee65b765
+      - key: COHERE_API_KEY
+        value: DGd7ASeNFpOTBHffl8Gm4x1SQjhM3vS046mnhC3D
