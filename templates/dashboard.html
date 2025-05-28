@@ -1,54 +1,28 @@
+<!-- templates/dashboard.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>SMS Advisory Dashboard</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        h2 { color: #2c3e50; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 8px; }
-        th { background-color: #f4f4f4; }
-    </style>
+    <title>SMS Dashboard</title>
 </head>
 <body>
-    <h2>SMS Advisory Dashboard</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Phone</th>
-                <th>Message</th>
-                <th>Reply</th>
-                <th>Timestamp</th>
-            </tr>
-        </thead>
-        <tbody id="messages-body">
-            <!-- Messages will load here -->
-        </tbody>
+    <h1>SMS Logs</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Phone</th>
+            <th>Message</th>
+            <th>Reply</th>
+            <th>Timestamp</th>
+        </tr>
+        {% for msg in messages %}
+        <tr>
+            <td>{{ msg["id"] }}</td>
+            <td>{{ msg["phone"] }}</td>
+            <td>{{ msg["text"] }}</td>
+            <td>{{ msg["reply"] }}</td>
+            <td>{{ msg["timestamp"] }}</td>
+        </tr>
+        {% endfor %}
     </table>
-
-    <script>
-        async function fetchMessages() {
-            const response = await fetch('/api/messages');
-            const data = await response.json();
-            const tbody = document.getElementById('messages-body');
-            tbody.innerHTML = '';
-
-            data.messages.forEach(msg => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${msg.phone}</td>
-                    <td>${msg.text}</td>
-                    <td>${msg.reply}</td>
-                    <td>${msg.timestamp}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Fetch messages every 5 seconds
-        fetchMessages();
-        setInterval(fetchMessages, 5000);
-    </script>
 </body>
 </html>

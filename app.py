@@ -1,8 +1,10 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 import africastalking
 import os
 from dotenv import load_dotenv
 import cohere
+import sqlite3
+from models import insert_message  # ✅ Import your database function
 
 # Load environment variables
 load_dotenv()
@@ -40,7 +42,6 @@ def receive_sms():
         )
         reply_text = response.generations[0].text.strip()
         print("🤖 Reply:", reply_text)
-
     except Exception as e:
         print("❌ AI error:", str(e))
         reply_text = "Sorry, I couldn't process your question. Please try again."
@@ -51,11 +52,31 @@ def receive_sms():
     except Exception as e:
         print("❌ SMS error:", str(e))
 
+    # ✅ Log the message to the database
+    try:
+        insert_message(sender, message, reply_text)
+    except Exception as e:
+        print("❌ DB error:", str(e))
+
     return "OK", 200
 
 @app.route("/")
 def index():
     return "✅ AI SMS Advisor with Cohere is running."
+
+# ✅ Dashboard route
+@app.route("/dashboard")
+def dashboard():
+    try:
+        conn = sqlite3.connect("messages.db")
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM messages ORDER BY timestamp DESC")
+        rows = cur.fetchall()
+        conn.close()
+        return render_template("dashboard.html", messages=rows)
+    except Exception as e:
+        return f"Database error: {e}", 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
