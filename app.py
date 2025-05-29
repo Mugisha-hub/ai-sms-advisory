@@ -113,7 +113,9 @@ def dashboard():
         return render_template("dashboard.html", messages=rows)
     except Exception as e:
         return f"Database error: {e}", 500
-    @app.route("/analytics")
+
+    
+@app.route("/analytics")
 def analytics():
     if not session.get("logged_in"):
         return redirect(url_for("login"))

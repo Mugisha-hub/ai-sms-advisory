@@ -2,63 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SMS Advisory Dashboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f9;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem;
-            text-align: center;
-        }
-        .container {
-            padding: 2rem;
-        }
-        .message-card {
-            background-color: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .sender {
-            font-weight: bold;
-            color: #2980b9;
-        }
-        .text {
-            margin: 0.5rem 0;
-            color: #34495e;
-        }
-        .reply {
-            font-style: italic;
-            color: #27ae60;
-        }
-        .timestamp {
-            font-size: 0.85rem;
-            color: #7f8c8d;
-        }
-    </style>
+    <title>SMS Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>📊 AI SMS Advisory Dashboard</h1>
-    </header>
     <div class="container">
-        {% for msg in messages %}
-            <div class="message-card">
-                <div class="sender">📱 {{ msg.phone }}</div>
-                <div class="text">❓ {{ msg.text }}</div>
-                <div class="reply">🤖 {{ msg.reply }}</div>
-                <div class="timestamp">🕒 {{ msg.timestamp }}</div>
-            </div>
-        {% else %}
-            <p>No messages yet.</p>
-        {% endfor %}
+        <h1>📊 AI SMS Advisory Dashboard</h1>
+              <!-- 🔗 Link to Analytics -->
+                  <div style="margin-bottom: 1rem;">
+                       <a href="{{ url_for('analytics') }}" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px;">
+                📈 View Analytics
+            </a>
+        </div>
+
+        <!-- Existing dashboard content continues below -->
+
+        <!-- Filter Form -->
+        <form method="get" class="filter-form">
+            <input type="text" name="phone" placeholder="Search by phone..." value="{{ request.args.get('phone', '') }}">
+            <input type="text" name="keyword" placeholder="Search by keyword..." value="{{ request.args.get('keyword', '') }}">
+            <input type="date" name="date" value="{{ request.args.get('date', '') }}">
+            <button type="submit">🔍 Filter</button>
+        </form>
+
+        <!-- Table of messages -->
+        <table>
+            <thead>
+                <tr>
+                    <th>📱 Phone</th>
+                    <th>📩 Message</th>
+                    <th>🤖 Reply</th>
+                    <th>🕒 Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for msg in messages %}
+                <tr>
+                    <td>{{ msg.phone }}</td>
+                    <td>{{ msg.text }}</td>
+                    <td>{{ msg.reply }}</td>
+                    <td>{{ msg.timestamp }}</td>
+                </tr>
+                {% endfor %}
+                {% if messages|length == 0 %}
+                <tr><td colspan="4" style="text-align:center;">No messages found.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
     </div>
 </body>
 </html>
