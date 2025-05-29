@@ -76,22 +76,79 @@ def login():
         return "Incorrect password", 403
     return render_template("login.html")
 
-# 📊 Dashboard route
+# 📊 Dashboard route with filtering
 @app.route("/dashboard")
 def dashboard():
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
+    phone = request.args.get("phone", "").strip()
+    keyword = request.args.get("keyword", "").strip()
+    date = request.args.get("date", "").strip()
+
+    query = "SELECT * FROM messages WHERE 1=1"
+    params = []
+
+    if phone:
+        query += " AND phone LIKE ?"
+        params.append(f"%{phone}%")
+
+    if keyword:
+        query += " AND (text LIKE ? OR reply LIKE ?)"
+        params.extend([f"%{keyword}%", f"%{keyword}%"])
+
+    if date:
+        query += " AND DATE(timestamp) = ?"
+        params.append(date)
+
+    query += " ORDER BY timestamp DESC"
+
     try:
         conn = sqlite3.connect("messages.db")
         conn.row_factory = sqlite3.Row
         cur = conn.cursor()
-        cur.execute("SELECT * FROM messages ORDER BY timestamp DESC")
+        cur.execute(query, params)
         rows = cur.fetchall()
         conn.close()
         return render_template("dashboard.html", messages=rows)
     except Exception as e:
         return f"Database error: {e}", 500
+    @app.route("/analytics")
+def analytics():
+    if not session.get("logged_in"):
+        return redirect(url_for("login"))
+
+    try:
+        conn = sqlite3.connect("messages.db")
+        cur = conn.cursor()
+
+        # Total messages
+        cur.execute("SELECT COUNT(*) FROM messages")
+        total_messages = cur.fetchone()[0]
+
+        # Unique senders
+        cur.execute("SELECT COUNT(DISTINCT phone) FROM messages")
+        unique_senders = cur.fetchone()[0]
+
+        # Messages per day
+        cur.execute("""
+            SELECT DATE(timestamp) as day, COUNT(*) as count
+            FROM messages
+            GROUP BY day
+            ORDER BY day DESC
+            LIMIT 7
+        """)
+        messages_per_day = cur.fetchall()
+
+        conn.close()
+
+        return render_template("analytics.html",
+                               total_messages=total_messages,
+                               unique_senders=unique_senders,
+                               messages_per_day=messages_per_day)
+    except Exception as e:
+        return f"Analytics error: {e}", 500
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
