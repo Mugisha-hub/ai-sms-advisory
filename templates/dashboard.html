@@ -1,28 +1,64 @@
-<!-- templates/dashboard.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SMS Dashboard</title>
+    <meta charset="UTF-8">
+    <title>SMS Advisory Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .container {
+            padding: 2rem;
+        }
+        .message-card {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .sender {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .text {
+            margin: 0.5rem 0;
+            color: #34495e;
+        }
+        .reply {
+            font-style: italic;
+            color: #27ae60;
+        }
+        .timestamp {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+        }
+    </style>
 </head>
 <body>
-    <h1>SMS Logs</h1>
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Phone</th>
-            <th>Message</th>
-            <th>Reply</th>
-            <th>Timestamp</th>
-        </tr>
+    <header>
+        <h1>📊 AI SMS Advisory Dashboard</h1>
+    </header>
+    <div class="container">
         {% for msg in messages %}
-        <tr>
-            <td>{{ msg["id"] }}</td>
-            <td>{{ msg["phone"] }}</td>
-            <td>{{ msg["text"] }}</td>
-            <td>{{ msg["reply"] }}</td>
-            <td>{{ msg["timestamp"] }}</td>
-        </tr>
+            <div class="message-card">
+                <div class="sender">📱 {{ msg.phone }}</div>
+                <div class="text">❓ {{ msg.text }}</div>
+                <div class="reply">🤖 {{ msg.reply }}</div>
+                <div class="timestamp">🕒 {{ msg.timestamp }}</div>
+            </div>
+        {% else %}
+            <p>No messages yet.</p>
         {% endfor %}
-    </table>
+    </div>
 </body>
 </html>
