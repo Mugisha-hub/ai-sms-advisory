@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for, session
 import africastalking
 import os
 from dotenv import load_dotenv
@@ -11,6 +11,7 @@ load_dotenv()
 
 # Flask app
 app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "defaultsecret")  # 🔐 Required for session handling
 
 # Africa's Talking setup
 username = os.getenv("AT_USERNAME", "sandbox")
@@ -64,9 +65,23 @@ def receive_sms():
 def index():
     return "✅ AI SMS Advisor with Cohere is running."
 
-# ✅ Dashboard route
+# 🔐 Login route
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        password = request.form.get("password")
+        if password == os.getenv("DASHBOARD_PASSWORD", "farmer123"):
+            session["logged_in"] = True
+            return redirect(url_for("dashboard"))
+        return "Incorrect password", 403
+    return render_template("login.html")
+
+# 📊 Dashboard route
 @app.route("/dashboard")
 def dashboard():
+    if not session.get("logged_in"):
+        return redirect(url_for("login"))
+
     try:
         conn = sqlite3.connect("messages.db")
         conn.row_factory = sqlite3.Row
