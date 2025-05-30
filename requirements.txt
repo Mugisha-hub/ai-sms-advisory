@@ -14,3 +14,7 @@ python-dotenv==1.1.0
 requests==2.32.3
 urllib3==2.4.0
 Werkzeug==3.1.3
+
+# PostgreSQL + SQLAlchemy
+SQLAlchemy==2.0.30
+psycopg2-binary==2.9.9
