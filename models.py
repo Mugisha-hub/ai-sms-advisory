@@ -5,14 +5,14 @@ from datetime import datetime
 db = SQLAlchemy()
 
 # Message model definition
-class Message(db.Model):
+class Message(Base):
     __tablename__ = 'messages'
-
-    id = db.Column(db.Integer, primary_key=True)
-    phone = db.Column(db.String(50))
-    text = db.Column(db.Text)
-    reply = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    id = Column(Integer, primary_key=True)
+    phone = Column(String)
+    text = Column(Text)
+    reply = Column(Text)
+    timestamp = Column(DateTime, default=datetime.utcnow)
+    tags = Column(String)  # <--- this line is causing the error
 
     def __repr__(self):
         return f"<Message from {self.phone} at {self.timestamp}>"
