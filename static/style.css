@@ -1,64 +1,139 @@
+/* General layout */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
-    margin: 0;
-    padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f7f9fb;
+  margin: 0;
+  padding: 20px;
+  color: #333;
 }
 
-h1 {
-    color: #2c3e50;
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-form {
-    margin-bottom: 20px;
+h1, h3 {
+  color: #2c3e50;
 }
 
-input[type="text"], input[type="date"] {
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+/* Filter form */
+.filter-form {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-button {
-    padding: 8px 12px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.filter-form input[type="text"],
+.filter-form input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-button:hover {
-    background-color: #2980b9;
+.filter-form button {
+  padding: 8px 16px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
+.filter-form button:hover {
+  background-color: #1565c0;
+}
+
+/* Table styles */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: white;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
 }
 
 th, td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
 }
 
 th {
-    background-color: #2c3e50;
-    color: white;
+  background-color: #f0f2f5;
+  color: #333;
+  font-weight: 600;
 }
 
-tr:hover {
-    background-color: #f1f1f1;
+tr:nth-child(even) {
+  background-color: #fafafa;
 }
 
-.no-messages {
-    padding: 20px;
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeeba;
-    border-radius: 4px;
-    margin-top: 20px;
+/* Tags column styling */
+.tags-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+/* Base tag style */
+.tag-badge {
+  padding: 3px 7px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Crop tags (e.g. tomato, maize) */
+.tag-crop {
+  background-color: #e0f7e9;
+  color: #2e7d32;
+}
+
+.tag-crop:hover {
+  background-color: #c8efd6;
+}
+
+/* Disease or pest tags */
+.tag-problem {
+  background-color: #ffe0e0;
+  color: #c62828;
+}
+
+.tag-problem:hover {
+  background-color: #ffc5c5;
+}
+
+/* Nutrient/Fertilizer tags */
+.tag-nutrient {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.tag-nutrient:hover {
+  background-color: #cce5ff;
+}
+
+/* Analytics tag frequency table */
+.analytics-tags-table {
+  margin-top: 20px;
+  width: 50%;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.analytics-tags-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.analytics-tags-table td, .analytics-tags-table th {
+  padding: 8px 12px;
 }

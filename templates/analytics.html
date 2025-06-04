@@ -53,6 +53,20 @@
         <div class="stat-box">Unique Senders: <strong>{{ unique_senders }}</strong></div>
 
         <h2>📅 Messages Per Day (Last 7 Days)</h2>
+<h3>🏷️ Tag Frequency</h3>
+<table>
+  <thead>
+    <tr><th>Tag</th><th>Count</th></tr>
+  </thead>
+  <tbody>
+    {% for tag, count in tag_stats %}
+    <tr>
+      <td>{{ tag }}</td>
+      <td>{{ count }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
         <table>
             <tr>
                 <th>Date</th>

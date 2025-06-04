@@ -6,6 +6,7 @@ import cohere
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, func
 from sqlalchemy.orm import sessionmaker, declarative_base
 from datetime import datetime
+from tagging import extract_tags_from_message  # ✅ Tagging utility
 
 # Load environment variables
 load_dotenv()
@@ -24,11 +25,12 @@ sms = africastalking.SMS
 co = cohere.Client(os.getenv("COHERE_API_KEY"))
 
 # Database setup
-DATABASE_URL = os.getenv("DATABASE_URL")  # PostgreSQL connection string
+DATABASE_URL = os.getenv("DATABASE_URL")
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
+# ✅ Updated model to include tags
 class Message(Base):
     __tablename__ = "messages"
     id = Column(Integer, primary_key=True, index=True)
@@ -36,12 +38,13 @@ class Message(Base):
     text = Column(Text)
     reply = Column(Text)
     timestamp = Column(DateTime, default=datetime.utcnow)
+    tags = Column(Text)  # ✅ New column for tags
 
 Base.metadata.create_all(bind=engine)
 
-def insert_message(phone, text, reply):
+def insert_message(phone, text, reply, tags):
     db = SessionLocal()
-    msg = Message(phone=phone, text=text, reply=reply)
+    msg = Message(phone=phone, text=text, reply=reply, tags=tags)
     db.add(msg)
     db.commit()
     db.close()
@@ -70,7 +73,8 @@ def receive_sms():
         print("❌ SMS error:", str(e))
 
     try:
-        insert_message(sender, message, reply_text)
+        tags = extract_tags_from_message(message)
+        insert_message(sender, message, reply_text, tags=",".join(tags))  # save as comma-separated
     except Exception as e:
         print("❌ DB error:", str(e))
 
@@ -105,7 +109,11 @@ def dashboard():
     if phone:
         query = query.filter(Message.phone.ilike(f"%{phone}%"))
     if keyword:
-        query = query.filter((Message.text.ilike(f"%{keyword}%")) | (Message.reply.ilike(f"%{keyword}%")))
+        query = query.filter(
+            (Message.text.ilike(f"%{keyword}%")) |
+            (Message.reply.ilike(f"%{keyword}%")) |
+            (Message.tags.ilike(f"%{keyword}%"))
+        )
     if date:
         query = query.filter(func.date(Message.timestamp) == date)
 
@@ -119,7 +127,6 @@ def analytics():
         return redirect(url_for("login"))
 
     db = SessionLocal()
-
     try:
         total_messages = db.query(func.count(Message.id)).scalar()
         unique_senders = db.query(func.count(func.distinct(Message.phone))).scalar()

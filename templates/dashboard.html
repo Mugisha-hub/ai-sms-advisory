@@ -8,14 +8,13 @@
 <body>
     <div class="container">
         <h1>📊 AI SMS Advisory Dashboard</h1>
-              <!-- 🔗 Link to Analytics -->
-                  <div style="margin-bottom: 1rem;">
-                       <a href="{{ url_for('analytics') }}" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px;">
+
+        <!-- 🔗 Link to Analytics -->
+        <div style="margin-bottom: 1rem;">
+            <a href="{{ url_for('analytics') }}" style="background-color: #4CAF50; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px;">
                 📈 View Analytics
             </a>
         </div>
-
-        <!-- Existing dashboard content continues below -->
 
         <!-- Filter Form -->
         <form method="get" class="filter-form">
@@ -33,6 +32,7 @@
                     <th>📩 Message</th>
                     <th>🤖 Reply</th>
                     <th>🕒 Timestamp</th>
+                    <th>Tags</th> 
                 </tr>
             </thead>
             <tbody>
@@ -42,10 +42,29 @@
                     <td>{{ msg.text }}</td>
                     <td>{{ msg.reply }}</td>
                     <td>{{ msg.timestamp }}</td>
+                    <td class="tags-cell">
+                        {% if msg.tags %}
+                            {% for tag in msg.tags.split(',') %}
+                                {% set tag = tag.strip() %}
+                                {% if tag in ['tomato', 'maize', 'beans', 'cabbage', 'onion'] %}
+                                    <span class="tag-badge tag-crop">{{ tag }}</span>
+                                {% elif tag in ['disease', 'pest'] %}
+                                    <span class="tag-badge tag-problem">{{ tag }}</span>
+                                {% elif tag in ['fertilizer', 'nutrient deficiency'] %}
+                                    <span class="tag-badge tag-nutrient">{{ tag }}</span>
+                                {% else %}
+                                    <span class="tag-badge">{{ tag }}</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <span style="color: #ccc;">—</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
+
                 {% if messages|length == 0 %}
-                <tr><td colspan="4" style="text-align:center;">No messages found.</td></tr>
+                <tr><td colspan="5" style="text-align:center;">No messages found.</td></tr>
                 {% endif %}
             </tbody>
         </table>
